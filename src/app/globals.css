@@ -46,6 +46,8 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --font-body: var(--font-manrope);
+  --font-heading: var(--font-space);
 }
 
 :root {
@@ -123,8 +125,14 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body);
   }
   html {
     @apply font-sans;
   }
+    h1,
+    h2,
+    h3 {
+      font-family: var(--font-heading);
+    }
 }
