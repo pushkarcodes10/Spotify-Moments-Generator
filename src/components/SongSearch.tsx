@@ -46,7 +46,7 @@ export default function SongSearch() {
     uri: selectedTrack.uri
   });
 
-  router.push(`/src/app/moment${params.toString()}`)
+  router.push(`/editor?${params.toString()}`)
 
 }
 
