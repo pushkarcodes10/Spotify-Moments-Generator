@@ -98,8 +98,6 @@ export default function SongSearch() {
 
   return (
     <main className="min-h-screen w-full overflow-x-hidden bg-slate-950 px-4 sm:px-6 lg:px-8">
-
-      {/* Heading */}
       <div className="flex justify-center">
         <SplitText
           text="Search for Your Favourite Song"
@@ -127,8 +125,6 @@ export default function SongSearch() {
         />
       </div>
 
-
-      {/* Search */}
       <div
         ref={dropdownRef}
         className="
@@ -146,8 +142,6 @@ export default function SongSearch() {
             onSubmit={onSubmit}
           />
 
-
-          {/* Dropdown */}
           {showDropdown && results.length > 0 && (
             <div
               className="
@@ -207,8 +201,6 @@ export default function SongSearch() {
         </div>
       </div>
 
-
-      {/* Selected Song */}
       {selectedTrack && (
         <div
           className="
@@ -239,24 +231,22 @@ export default function SongSearch() {
             "
           />
 
-
           <div className="min-w-0 flex-1 text-center sm:text-left">
             <span
               className="
                 inline-block
                 rounded-full
-                bg-green-500/10
+                bg-[#53E076]
                 px-2
                 py-0.5
                 text-[10px]
                 font-bold
                 uppercase
-                text-green-400
+                text-[#003914]
               "
             >
               Selected Song
             </span>
-
 
             <h3 className="mt-1 truncate font-semibold text-white">
               {selectedTrack.name}
@@ -266,7 +256,6 @@ export default function SongSearch() {
               {selectedTrack.artist}
             </p>
           </div>
-
 
           <button
             onClick={() => setSelectedTrack(null)}
@@ -285,10 +274,8 @@ export default function SongSearch() {
           >
             ✕
           </button>
-
         </div>
       )}
-
     </main>
   );
 }
