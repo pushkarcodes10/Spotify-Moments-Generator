@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import SplitText from "@/src/components/ui/SplitText";
 import { PlaceholdersAndVanishInput } from "@/src/components/ui/placeholders-and-vanish-input";
+import { useRouter } from "next/navigation";
 
 interface Track {
   id: string;
@@ -15,6 +16,9 @@ interface Track {
 }
 
 export default function SongSearch() {
+
+  const router = useRouter();
+
   const placeholders = [
     "Search for a song...",
     "Tum Se Hi",
@@ -30,6 +34,21 @@ export default function SongSearch() {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const proceedToEditor = () => {
+    if (!selectedTrack) return;
+
+  const params = new URLSearchParams({
+    trackId: selectedTrack?.id,
+    name: selectedTrack?.name,
+    artist: selectedTrack.artist,
+    thumbnail: selectedTrack.thumbnail,
+    uri: selectedTrack.uri
+  });
+
+  router.push(`/src/app/moment${params.toString()}`)
+
+}
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -274,6 +293,15 @@ export default function SongSearch() {
           >
             ✕
           </button>
+
+          <div className="absolute bottom-50 ml-25">
+            <button 
+            className="bg-[#53E076] text-[#003914] p-5 rounded-full text-lg font-extrabold font-mono italic cursor-pointer"
+            onClick={proceedToEditor}
+            >
+              Confirm Selection →
+            </button>
+          </div>
         </div>
       )}
     </main>

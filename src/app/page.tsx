@@ -4,6 +4,7 @@ import React, {useEffect} from "react";
 import { motion } from "motion/react";
 import { LampContainer } from "@/src/components/ui/lamp";
 import SongSearch from "../components/SongSearch";
+import Link from "next/link";
 
 export default function Home() {
 
