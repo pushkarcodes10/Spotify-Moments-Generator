@@ -37,7 +37,7 @@ export default async function EditorPage({searchParams}: EditorPageProps) {
           direction="top"
           className="text-[#BCCBB9] mt-2 text-lg"
         />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 absolute bottom-25 right-60">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 absolute bottom-25 right-54">
           <div className="bg-zinc-900 border border-zinc-800 p-5 rounded-2xl flex flex-col items-center text-center space-y-4">
             <img
               src={params.thumbnail}
