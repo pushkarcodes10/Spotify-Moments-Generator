@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Cropper from "react-easy-crop";
 import BlurText from "@/src/components/ui/BlurText";
@@ -15,21 +15,40 @@ interface TrackData {
   uri: string;
 }
 
-export default function EditorWorkspace({
-  initialTrack,
-}: {
-  initialTrack: TrackData;
-}) {
+export default function EditorWorkspace({ initialTrack }: { initialTrack: TrackData }) {
   const [message, setMessage] = useState("THE SOUNDTRACK TO OUR SUMMER");
-  const [displayDate, setDisplayDate] = useState("25th April 2026");
+  const [rawDate, setRawDate] = useState("");
+  const [displayDate, setDisplayDate] = useState("");
+  const [dateError, setDateError] = useState(false);
 
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
-
+  
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
   const [isCropping, setIsCropping] = useState(false);
+
+  const formatDateString = (dateVal: string) => {
+    if (!dateVal) return "";
+    const dateObj = new Date(dateVal);
+    return dateObj.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    });
+  };
+
+  useEffect(() => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    const formattedToday = `${yyyy}-${mm}-${dd}`;
+    
+    setRawDate(formattedToday);
+    setDisplayDate(formatDateString(formattedToday));
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -39,37 +58,33 @@ export default function EditorWorkspace({
     }
   };
 
-  const onCropComplete = useCallback(
-    (_: any, currentCroppedAreaPixels: any) => {
-      setCroppedAreaPixels(currentCroppedAreaPixels);
-    },
-    []
-  );
+  const onCropComplete = useCallback((_: any, currentCroppedAreaPixels: any) => {
+    setCroppedAreaPixels(currentCroppedAreaPixels);
+  }, []);
 
   const handleApplyCrop = async () => {
     if (!imageSrc || !croppedAreaPixels) return;
-
     try {
       const result = await getCroppedImg(imageSrc, croppedAreaPixels);
       setCroppedImage(result);
       setIsCropping(false);
     } catch (err) {
-      console.error("Cropping coordinate execution failed:", err);
+      console.error(err);
     }
   };
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawDate = e.target.value;
-    if (!rawDate) return;
-
-    const dateObj = new Date(rawDate);
-    const formatted = dateObj.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    });
-
-    setDisplayDate(formatted);
+  const handleDateInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.value;
+    setRawDate(selected);
+    
+    if (!selected) {
+      setDateError(true);
+      setDisplayDate("Select Date");
+      return;
+    }
+    
+    setDateError(false);
+    setDisplayDate(formatDateString(selected));
   };
 
   return (
@@ -81,7 +96,6 @@ export default function EditorWorkspace({
         direction="top"
         className="text-[#E2E2E2] text-2xl sm:text-3xl md:text-4xl italic text-center"
       />
-
       <BlurText
         text="Design a memory that lasts forever."
         delay={200}
@@ -98,7 +112,6 @@ export default function EditorWorkspace({
               alt={initialTrack.name}
               className="w-28 h-28 object-cover rounded-2xl shadow-2xl border border-zinc-800 flex-shrink-0"
             />
-
             <div className="w-full min-w-0 text-center sm:text-left space-y-3">
               <div>
                 <h2 className="text-lg font-bold text-white truncate">
@@ -108,14 +121,12 @@ export default function EditorWorkspace({
                   {initialTrack.artist}
                 </p>
               </div>
-
               <div className="bg-zinc-950 p-2 rounded-xl text-left font-mono text-[11px] text-zinc-400 truncate">
                 <span className="text-zinc-600 block uppercase font-bold tracking-wider text-[9px]">
                   Spotify URI
                 </span>
                 {initialTrack.uri}
               </div>
-
               <Link
                 href="/"
                 className="bg-[#53E076] text-[#003914] py-1 px-3 rounded-full text-xs font-bold tracking-wide uppercase inline-block hover:bg-[#42c564] transition"
@@ -132,9 +143,8 @@ export default function EditorWorkspace({
 
             <div className="space-y-2">
               <label className="text-xs font-bold uppercase tracking-wider text-zinc-400 block">
-                Select &amp; Position Image
+                Select & Position Image
               </label>
-
               <input
                 type="file"
                 accept="image/*"
@@ -145,9 +155,8 @@ export default function EditorWorkspace({
 
             <div className="space-y-1">
               <label className="text-xs font-bold uppercase tracking-wider text-zinc-400 block">
-                Message...
+                Green Pill Custom Text
               </label>
-
               <input
                 maxLength={60}
                 value={message}
@@ -159,23 +168,45 @@ export default function EditorWorkspace({
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold uppercase tracking-wider text-zinc-400 block">
-                Moment Date
-              </label>
-
+              <div className="flex justify-between items-center">
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-400 block">
+                  Moment Timeline Date
+                </label>
+                {dateError && (
+                  <span className="text-[10px] text-red-400 font-bold tracking-wide animate-pulse uppercase">
+                    Date Required *
+                  </span>
+                )}
+              </div>
               <input
-                onChange={handleDateChange}
-                className="w-full bg-white p-3 rounded-xl text-zinc-900 font-medium text-base focus:ring-2 focus:ring-green-500 outline-none"
+                value={rawDate}
+                onChange={handleDateInputChange}
+                required
+                className={`w-full p-3 rounded-xl font-medium text-base outline-none transition bg-white text-zinc-900 focus:ring-2 ${
+                  dateError
+                    ? "ring-2 ring-red-500 focus:ring-red-500"
+                    : "focus:ring-green-500"
+                }`}
                 type="date"
               />
             </div>
 
             <div className="w-full flex justify-center mt-2">
               <Link
-                href="/moment"
-                className="bg-[#53E076] text-[#003914] py-2 px-6 rounded-full text-base font-extrabold font-mono italic hover:scale-105 transition shadow-lg shadow-green-500/10"
+                href={rawDate ? "/moment" : "#"}
+                onClick={(e) => {
+                  if (!rawDate) {
+                    e.preventDefault();
+                    setDateError(true);
+                  }
+                }}
+                className={`py-2 px-6 rounded-full text-base font-extrabold font-mono italic transition shadow-lg ${
+                  rawDate
+                    ? "bg-[#53E076] text-[#003914] hover:scale-105 shadow-green-500/10 cursor-pointer"
+                    : "bg-zinc-700 text-zinc-500 cursor-not-allowed opacity-50"
+                }`}
               >
-                Confirm Card... →
+                Next Step: Confirm Card... →
               </Link>
             </div>
           </div>
@@ -186,6 +217,9 @@ export default function EditorWorkspace({
             imageUrl={croppedImage}
             message={message}
             momentDate={displayDate}
+            trackName={initialTrack.name}
+            artistName={initialTrack.artist}
+            trackUri={initialTrack.uri}
           />
         </div>
       </div>
@@ -213,7 +247,6 @@ export default function EditorWorkspace({
               <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">
                 Zoom Slider
               </label>
-
               <input
                 type="range"
                 value={zoom}
@@ -232,7 +265,6 @@ export default function EditorWorkspace({
               >
                 Cancel
               </button>
-
               <button
                 onClick={handleApplyCrop}
                 className="px-5 py-2.5 text-xs font-bold uppercase bg-green-500 text-black hover:bg-green-400 rounded-xl transition"

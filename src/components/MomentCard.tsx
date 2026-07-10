@@ -8,6 +8,7 @@ interface MomentCardProps {
   momentDate?: string;
   trackName?: string;
   artistName?: string;
+  trackUri?: string;
 }
 
 export default function MomentCard({
@@ -16,9 +17,21 @@ export default function MomentCard({
   momentDate = "25th April 2026",
   trackName = "Track Name",
   artistName = "Artist Name",
+  trackUri = "spotify:track:4pt7CsXjaI2vvs6v6g6u8N",
 }: MomentCardProps) {
+
+  const getFontSizeClass = (text: string) => {
+    const length = text.length;
+    if (length > 45) return "text-sm sm:text-xs leading-tight";
+    if (length > 30) return "text-base sm:text-sm leading-snug";
+    if (length > 20) return "text-xl sm:text-lg";
+    return "text-2xl sm:text-xl";
+  };
+
+  const scanCodeUrl = `/api/users/scancode?uri=${encodeURIComponent(trackUri)}`;
+
   return (
-    <div className="font-ui w-full max-w-sm">
+    <div className="font-ui w-full max-w-sm select-none">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@400;500;600&display=swap');
 
@@ -31,7 +44,7 @@ export default function MomentCard({
         }
       `}</style>
 
-      <div className="bg-[#F7F6F2] rounded-[28px] p-3 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.6)] border border-black/5">
+      <div className="bg-[#F7F6F2] rounded-[28px] p-4 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.6)] border border-black/5 flex flex-col gap-3">
         <div className="relative rounded-[20px] overflow-hidden bg-[#E9E7DF] aspect-square flex items-center justify-center">
           {imageUrl ? (
             <img
@@ -61,51 +74,27 @@ export default function MomentCard({
           )}
         </div>
 
-        <div className="mt-3 rounded-[16px] bg-white px-4 py-3 min-h-16 flex items-center justify-center text-center">
-          <p className="font-hand text-2xl leading-snug text-[#3F6B3D]">
+        <div className="rounded-[16px] bg-white px-4 py-3 min-h-[76px] h-[76px] flex items-center justify-center text-center overflow-hidden border border-zinc-100">
+          <p className={`font-hand text-[#3F6B3D] transition-all duration-200 break-words w-full ${getFontSizeClass(message)}`}>
             {message}
           </p>
         </div>
 
-        <div className="mt-2 text-center">
-          <span className="text-lg tracking-wide text-[#9A9788]">
+        <div className="text-center py-0.5">
+          <span className="text-sm font-semibold tracking-wide text-[#9A9788] uppercase font-mono">
             {momentDate}
           </span>
         </div>
 
-        <div className="mt-3 rounded-[16px] bg-black px-4 py-3 flex items-center gap-3">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="12" fill="#1DB954" />
-            <path
-              d="M6.5 9.5c3.5-1 7.5-.6 10 .9M7 12.3c3-.8 6.3-.5 8.6.8M7.5 15c2.4-.6 5-.4 6.9.7"
-              stroke="black"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-            />
-          </svg>
-
-          <ScanBars />
+        <div className="rounded-[16px] bg-black p-3 flex items-center justify-center shadow-md h-14 overflow-hidden">
+          <img 
+            src={scanCodeUrl} 
+            alt="Spotify Scan Code" 
+            className="h-full w-auto object-contain max-w-full"
+            crossOrigin="anonymous"
+          />
         </div>
       </div>
-    </div>
-  );
-}
-
-function ScanBars() {
-  const heights = [
-    10, 18, 8, 22, 14, 20, 9, 16, 24, 11, 19, 8, 15, 21, 10, 17, 23, 9, 14,
-    18, 12, 20, 8, 16,
-  ];
-
-  return (
-    <div className="flex items-center gap-[2px] flex-1 h-6">
-      {heights.map((h, i) => (
-        <div
-          key={i}
-          className="w-[2px] bg-white rounded-full"
-          style={{ height: `${h}px` }}
-        />
-      ))}
     </div>
   );
 }
