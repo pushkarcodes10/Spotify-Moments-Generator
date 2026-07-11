@@ -74,8 +74,8 @@ export default function MomentCard({
           )}
         </div>
 
-        <div className="rounded-[16px] bg-white px-4 py-3 min-h-[76px] h-[76px] flex items-center justify-center text-center overflow-hidden border border-zinc-100">
-          <p className={`font-hand text-[#3F6B3D] transition-all duration-200 break-words w-full ${getFontSizeClass(message)}`}>
+        <div className="rounded-[16px] bg-white px-4 py-3 min-h-19 h-19 flex items-center justify-center text-center overflow-hidden border border-zinc-100">
+          <p className={`font-hand text-[#3F6B3D] transition-all duration-200 wrap-break-word w-full ${getFontSizeClass(message)}`}>
             {message}
           </p>
         </div>

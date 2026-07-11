@@ -110,7 +110,7 @@ export default function EditorWorkspace({ initialTrack }: { initialTrack: TrackD
             <img
               src={initialTrack.thumbnail}
               alt={initialTrack.name}
-              className="w-28 h-28 object-cover rounded-2xl shadow-2xl border border-zinc-800 flex-shrink-0"
+              className="w-28 h-28 object-cover rounded-2xl shadow-2xl border border-zinc-800 shrink-0"
             />
             <div className="w-full min-w-0 text-center sm:text-left space-y-3">
               <div>
@@ -231,7 +231,7 @@ export default function EditorWorkspace({ initialTrack }: { initialTrack: TrackD
               Reposition Frame Image
             </h3>
 
-            <div className="relative w-full aspect-[4/3] bg-zinc-950 rounded-2xl overflow-hidden border border-zinc-800">
+            <div className="relative w-full aspect-4/3 bg-zinc-950 rounded-2xl overflow-hidden border border-zinc-800">
               <Cropper
                 image={imageSrc}
                 crop={crop}
