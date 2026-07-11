@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
 interface MomentCardProps {
   imageUrl?: string | null;
@@ -19,6 +19,7 @@ export default function MomentCard({
   artistName = "Artist Name",
   trackUri = "spotify:track:4pt7CsXjaI2vvs6v6g6u8N",
 }: MomentCardProps) {
+  const [scanCodeFailed, setScanCodeFailed] = useState(false);
 
   const getFontSizeClass = (text: string) => {
     const length = text.length;
@@ -31,7 +32,7 @@ export default function MomentCard({
   const scanCodeUrl = `/api/users/scancode?uri=${encodeURIComponent(trackUri)}`;
 
   return (
-    <div className="font-ui w-full max-w-sm select-none">
+    <div id="polaroid-capture-node" className="font-ui w-full max-w-sm select-none p-4 bg-transparent">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@400;500;600&display=swap');
 
@@ -51,6 +52,7 @@ export default function MomentCard({
               src={imageUrl}
               alt="Moment"
               className="w-full h-full object-cover"
+              crossOrigin="anonymous"
             />
           ) : (
             <div className="flex flex-col items-center gap-2 text-[#9A9788]">
@@ -66,7 +68,6 @@ export default function MomentCard({
                 <circle cx="8.5" cy="8.5" r="1.5" />
                 <path d="M21 15l-5-5L5 21" />
               </svg>
-
               <span className="font-hand text-2xl text-[#5C7A5A]">
                 Your photo goes here
               </span>
@@ -87,12 +88,16 @@ export default function MomentCard({
         </div>
 
         <div className="rounded-[16px] bg-black p-3 flex items-center justify-center shadow-md h-14 overflow-hidden">
-          <img 
-            src={scanCodeUrl} 
-            alt="Spotify Scan Code" 
-            className="h-full w-auto object-contain max-w-full"
-            crossOrigin="anonymous"
-          />
+          {!scanCodeFailed ? (
+            <img
+              src={scanCodeUrl}
+              alt="Spotify Scan Code"
+              className="h-full w-auto object-contain max-w-full"
+              onError={() => setScanCodeFailed(true)}
+            />
+          ) : (
+            <span className="text-white/50 text-xs">Scan code unavailable</span>
+          )}
         </div>
       </div>
     </div>

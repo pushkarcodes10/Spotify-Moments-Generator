@@ -11,7 +11,7 @@ interface TrackData {
   id: string;
   name: string;
   artist: string;
-  thumbnail: string;
+  thumbnail: string | null;
   uri: string;
 }
 
@@ -19,7 +19,9 @@ export default function EditorWorkspace({ initialTrack }: { initialTrack: TrackD
   const [message, setMessage] = useState("THE SOUNDTRACK TO OUR SUMMER");
   const [rawDate, setRawDate] = useState("");
   const [displayDate, setDisplayDate] = useState("");
+  
   const [dateError, setDateError] = useState(false);
+  const [fileError, setFileError] = useState<string | null>(null);
 
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
@@ -52,10 +54,22 @@ export default function EditorWorkspace({ initialTrack }: { initialTrack: TrackD
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImageSrc(URL.createObjectURL(file));
-      setIsCropping(true);
+    setFileError(null);
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setFileError("Please upload a valid image file (PNG/JPEG).");
+      return;
     }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setFileError("Image size must be smaller than 5MB.");
+      return;
+    }
+
+    setImageSrc(URL.createObjectURL(file));
+    setIsCropping(true);
   };
 
   const onCropComplete = useCallback((_: any, currentCroppedAreaPixels: any) => {
@@ -70,19 +84,18 @@ export default function EditorWorkspace({ initialTrack }: { initialTrack: TrackD
       setIsCropping(false);
     } catch (err) {
       console.error(err);
+      setFileError("Failed to crop image. Try another file.");
     }
   };
 
   const handleDateInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.value;
     setRawDate(selected);
-    
     if (!selected) {
       setDateError(true);
       setDisplayDate("Select Date");
       return;
     }
-    
     setDateError(false);
     setDisplayDate(formatDateString(selected));
   };
@@ -104,27 +117,33 @@ export default function EditorWorkspace({ initialTrack }: { initialTrack: TrackD
         className="text-[#BCCBB9] mt-2 text-base sm:text-lg text-center"
       />
 
-      <div className="w-full max-w-6xl mx-auto mt-10 grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-        <div className="lg:col-span-2 space-y-6 w-full">
+      <div className="w-full max-w-6xl mx-auto mt-10 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center lg:items-start">
+        
+        <div className="lg:col-span-2 space-y-6 w-full order-2 lg:order-1">
           <div className="bg-zinc-900 border border-zinc-800 p-5 rounded-3xl flex flex-col sm:flex-row items-center gap-5">
-            <img
-              src={initialTrack.thumbnail}
-              alt={initialTrack.name}
-              className="w-28 h-28 object-cover rounded-2xl shadow-2xl border border-zinc-800 shrink-0"
-            />
+            {initialTrack.thumbnail ? (
+              <img
+                src={initialTrack.thumbnail}
+                alt={initialTrack.name}
+                className="w-24 h-24 sm:w-28 sm:h-28 object-cover rounded-2xl shadow-2xl border border-zinc-800 shrink-0"
+              />
+            ) : (
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-zinc-600 shrink-0">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M9 18V5l12-2v13" />
+                  <circle cx="6" cy="18" r="3" />
+                  <circle cx="18" cy="16" r="3" />
+                </svg>
+              </div>
+            )}
+            
             <div className="w-full min-w-0 text-center sm:text-left space-y-3">
               <div>
-                <h2 className="text-lg font-bold text-white truncate">
-                  {initialTrack.name}
-                </h2>
-                <p className="text-zinc-400 text-sm truncate">
-                  {initialTrack.artist}
-                </p>
+                <h2 className="text-lg font-bold text-white truncate">{initialTrack.name}</h2>
+                <p className="text-zinc-400 text-sm truncate">{initialTrack.artist}</p>
               </div>
               <div className="bg-zinc-950 p-2 rounded-xl text-left font-mono text-[11px] text-zinc-400 truncate">
-                <span className="text-zinc-600 block uppercase font-bold tracking-wider text-[9px]">
-                  Spotify URI
-                </span>
+                <span className="text-zinc-600 block uppercase font-bold tracking-wider text-[9px]">Spotify URI</span>
                 {initialTrack.uri}
               </div>
               <Link
@@ -142,21 +161,20 @@ export default function EditorWorkspace({ initialTrack }: { initialTrack: TrackD
             </h3>
 
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-zinc-400 block">
-                Select & Position Image
-              </label>
-              <input
-                type="file"
-                accept="image/*"
+              <div className="flex justify-between items-center">
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-400 block">Select & Position Image</label>
+                {fileError && <span className="text-[10px] text-red-400 font-bold uppercase animate-pulse">{fileError}</span>}
+              </div>
+              <input 
+                type="file" 
+                accept="image/*" 
                 onChange={handleFileChange}
                 className="w-full text-sm text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:uppercase file:bg-zinc-800 file:text-white hover:file:bg-zinc-700 transition cursor-pointer"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold uppercase tracking-wider text-zinc-400 block">
-                Green Pill Custom Text
-              </label>
+              <label className="text-xs font-bold uppercase tracking-wider text-zinc-400 block">Green Pill Custom Text</label>
               <input
                 maxLength={60}
                 value={message}
@@ -169,23 +187,15 @@ export default function EditorWorkspace({ initialTrack }: { initialTrack: TrackD
 
             <div className="space-y-1">
               <div className="flex justify-between items-center">
-                <label className="text-xs font-bold uppercase tracking-wider text-zinc-400 block">
-                  Moment Timeline Date
-                </label>
-                {dateError && (
-                  <span className="text-[10px] text-red-400 font-bold tracking-wide animate-pulse uppercase">
-                    Date Required *
-                  </span>
-                )}
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-400 block">Moment Timeline Date</label>
+                {dateError && <span className="text-[10px] text-red-400 font-bold tracking-wide animate-pulse uppercase">Date Required *</span>}
               </div>
               <input
                 value={rawDate}
                 onChange={handleDateInputChange}
                 required
                 className={`w-full p-3 rounded-xl font-medium text-base outline-none transition bg-white text-zinc-900 focus:ring-2 ${
-                  dateError
-                    ? "ring-2 ring-red-500 focus:ring-red-500"
-                    : "focus:ring-green-500"
+                  dateError ? "ring-2 ring-red-500 focus:ring-red-500" : "focus:ring-green-500"
                 }`}
                 type="date"
               />
@@ -193,29 +203,33 @@ export default function EditorWorkspace({ initialTrack }: { initialTrack: TrackD
 
             <div className="w-full flex justify-center mt-2">
               <Link
-                href={rawDate ? "/moment" : "#"}
+                href={
+                  rawDate
+                    ? `/moment?trackId=${initialTrack.id}&name=${encodeURIComponent(initialTrack.name)}&artist=${encodeURIComponent(initialTrack.artist)}&uri=${encodeURIComponent(initialTrack.uri)}&message=${encodeURIComponent(message)}&date=${encodeURIComponent(displayDate)}&img=${encodeURIComponent(croppedImage || "")}`
+                    : "#"
+                }
                 onClick={(e) => {
                   if (!rawDate) {
                     e.preventDefault();
                     setDateError(true);
                   }
                 }}
-                className={`py-2 px-6 rounded-full text-base font-extrabold font-mono italic transition shadow-lg ${
-                  rawDate
-                    ? "bg-[#53E076] text-[#003914] hover:scale-105 shadow-green-500/10 cursor-pointer"
+                className={`py-3 px-6 rounded-full text-base font-black tracking-wide uppercase text-center transition shadow-lg w-full ${
+                  rawDate 
+                    ? "bg-[#53E076] text-[#003914] hover:scale-[1.02] shadow-green-500/10 cursor-pointer" 
                     : "bg-zinc-700 text-zinc-500 cursor-not-allowed opacity-50"
                 }`}
               >
-                Next Step: Confirm Card... →
+                Final Card... →
               </Link>
             </div>
           </div>
         </div>
 
-        <div className="w-full flex items-center justify-center lg:sticky lg:top-10 bg-zinc-900/20 p-6 border border-dashed border-zinc-800 rounded-[36px]">
-          <MomentCard
-            imageUrl={croppedImage}
-            message={message}
+        <div className="w-full flex items-center justify-center lg:sticky lg:top-10 bg-zinc-900/20 p-4 sm:p-6 border border-dashed border-zinc-800 rounded-[36px] order-1 lg:order-2">
+          <MomentCard 
+            imageUrl={croppedImage} 
+            message={message} 
             momentDate={displayDate}
             trackName={initialTrack.name}
             artistName={initialTrack.artist}
@@ -227,10 +241,8 @@ export default function EditorWorkspace({ initialTrack }: { initialTrack: TrackD
       {isCropping && imageSrc && (
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex flex-col items-center justify-center p-4">
           <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 w-full max-w-lg space-y-4 shadow-2xl">
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">
-              Reposition Frame Image
-            </h3>
-
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Reposition Frame Image</h3>
+            
             <div className="relative w-full aspect-4/3 bg-zinc-950 rounded-2xl overflow-hidden border border-zinc-800">
               <Cropper
                 image={imageSrc}
@@ -244,9 +256,7 @@ export default function EditorWorkspace({ initialTrack }: { initialTrack: TrackD
             </div>
 
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">
-                Zoom Slider
-              </label>
+              <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">Zoom Slider</label>
               <input
                 type="range"
                 value={zoom}

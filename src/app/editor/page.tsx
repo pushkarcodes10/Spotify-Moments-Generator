@@ -11,9 +11,7 @@ interface EditorPageProps {
   }>;
 }
 
-export default async function EditorPage({
-  searchParams,
-}: EditorPageProps) {
+export default async function EditorPage({ searchParams }: EditorPageProps) {
   const params = await searchParams;
 
   if (!params.trackId) {
@@ -21,13 +19,13 @@ export default async function EditorPage({
   }
 
   return (
-    <EditorWorkspace
+    <EditorWorkspace 
       initialTrack={{
         id: params.trackId,
         name: params.name || "Unknown Track",
         artist: params.artist || "Unknown Artist",
-        thumbnail: params.thumbnail || "",
-        uri: params.uri || "",
+        thumbnail: params.thumbnail && params.thumbnail.trim() !== "" ? params.thumbnail : null,
+        uri: params.uri || ""
       }}
     />
   );
