@@ -1,12 +1,12 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import html2canvas from "html2canvas-pro";
 import Link from "next/link";
 import MomentCard from "@/src/components/MomentCard";
 
-export default function MomentPage() {
+function MomentPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isExporting, setIsExporting] = useState(false);
@@ -93,5 +93,20 @@ export default function MomentPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function MomentPage() {
+  return (
+    <Suspense fallback={
+      <div className="bg-slate-950 min-h-screen flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(29,185,84,0.08),transparent_60%)] pointer-events-none" />
+        <div className="text-zinc-400 text-sm font-bold tracking-wide uppercase animate-pulse">
+          Loading Moment...
+        </div>
+      </div>
+    }>
+      <MomentPageContent />
+    </Suspense>
   );
 }
