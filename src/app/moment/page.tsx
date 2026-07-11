@@ -1,4 +1,4 @@
-import MomentCard from "@/src/components/MomentCard";
+import MomentCard from "@/src/components/MomentCard"
 
 export default function MomentPage() {
   return (

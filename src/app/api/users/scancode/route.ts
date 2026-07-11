@@ -8,14 +8,17 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "URI is required" }, { status: 400 });
   }
 
+  if (!uri.startsWith("spotify:track:")) {
+    return NextResponse.json({ error: "Invalid Spotify track URI" }, { status: 400 });
+  }
+
   try {
-    const cleanUri = uri.replaceAll(":", "-");
-    const targetUrl = `https://scancode.com/api/v1/generated/svg/${cleanUri}.svg`;
-    
+    const targetUrl = `https://scannables.scdn.co/uri/plain/svg/000000/white/640/${encodeURIComponent(uri)}`;
+
     const response = await fetch(targetUrl);
-    
+
     if (!response.ok) {
-      throw new Error("Failed to fetch code from Spotify");
+      throw new Error(`Failed to fetch code from Spotify (status ${response.status})`);
     }
 
     const svgData = await response.text();
@@ -23,7 +26,7 @@ export async function GET(request: NextRequest) {
     return new NextResponse(svgData, {
       headers: {
         "Content-Type": "image/svg+xml",
-        "Cache-Control": "public, max-age=86400",
+        "Cache-Control": "public, max-age=86400, immutable",
       },
     });
   } catch (error: any) {
