@@ -180,7 +180,7 @@ function MomentPageContent() {
 
       {/* Footer copyright */}
       <footer className="py-6 border-t border-[#222226]/40 text-center text-xs text-zinc-600 relative z-10">
-        <p>© SoundSphere • Scancode scans directly inside the Spotify app</p>
+        <p>© Spotify Moments Generator • Scancode scans directly inside the Spotify app</p>
       </footer>
     </div>
   );

@@ -3,13 +3,14 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Sparkles } from "lucide-react";
+import { SpotifyLogo } from "./RetroStickers";
 
 interface WaveBadge {
   id: number;
   label: string;
   theme: string;
   type: "symbol" | "text";
-  content: string;
+  content: React.ReactNode;
   color?: string;
 }
 
@@ -18,7 +19,14 @@ const BADGES: WaveBadge[] = [
   { id: 2, label: "Midnight City", theme: "Highway Drive", type: "text", content: "🚗" },
   { id: 3, label: "Yellow", theme: "First Dance", type: "text", content: "💛" },
   { id: 4, label: "Starboy", theme: "Concert Vibes", type: "symbol", content: "⚡", color: "#CCFF00" },
-  { id: 5, label: "Spotify Moments", theme: "The Keepsake", type: "symbol", content: "/", color: "#CCFF00" },
+  {
+    id: 5,
+    label: "Spotify Moments",
+    theme: "The Keepsake",
+    type: "symbol",
+    content: <SpotifyLogo className="w-5 h-5 sm:w-6 sm:h-6" color="#1DB954" />,
+    color: "#1DB954",
+  },
   { id: 6, label: "Photograph", theme: "Road Trips", type: "text", content: "📷" },
   { id: 7, label: "Golden Hour", theme: "Summer Sunsets", type: "text", content: "✨" },
   { id: 8, label: "Vinyl Memory", theme: "Anniversary", type: "symbol", content: "💿", color: "#CEACFE" },
@@ -34,8 +42,10 @@ export default function WaveDiscovery() {
 
   useEffect(() => {
     let animId: number;
-    const loop = () => {
-      setTime(Date.now() / 1000);
+    let start: number | null = null;
+    const loop = (now: number) => {
+      if (start === null) start = now;
+      setTime((now - start) / 1000);
       animId = requestAnimationFrame(loop);
     };
     animId = requestAnimationFrame(loop);
@@ -96,17 +106,17 @@ export default function WaveDiscovery() {
             </svg>
 
             {BADGES.map((b, idx) => {
-              const freq = 1.6;
               const speed = 2.2;
               const phase = (idx / BADGES.length) * (Math.PI * 2.8);
-              const yOffset = Math.sin(time * speed + phase) * 24;
-              const rotOffset = Math.cos(time * speed + phase) * 8;
+              const yOffset = Math.round(Math.sin(time * speed + phase) * 24 * 100) / 100;
+              const rotOffset = Math.round(Math.cos(time * speed + phase) * 8 * 100) / 100;
 
               const isHovered = hoveredIdx === idx;
 
               return (
                 <div
                   key={b.id}
+                  suppressHydrationWarning
                   onMouseEnter={() => setHoveredIdx(idx)}
                   onMouseLeave={() => setHoveredIdx(null)}
                   style={{

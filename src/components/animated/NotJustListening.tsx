@@ -2,60 +2,60 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, CheckCircle } from "lucide-react";
+import { MEDIA_ASSETS } from "../../data/mediaAssets";
 
-interface ListeningItem {
+interface BenefitItem {
   id: string;
   title: string;
   description: string;
   previewImage?: string;
 }
 
-const ITEMS: ListeningItem[] = [
+const ITEMS: BenefitItem[] = [
   {
-    id: "empowerment",
-    title: "Artistic Empowerment",
+    id: "frictionless",
+    title: "Zero Sign-Up, 100% Frictionless",
     description:
-      "Empowering independent creators with tools that put musical expression first. Artists retain creative ownership and cultivate genuine listeners who care about their sound and journey.",
-    previewImage:
-      "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=80",
+      "No account to create, no email passwords, and no personal Spotify credentials required. Go from landing on the page to a finished keepsake in under 2 minutes.",
+    previewImage: MEDIA_ASSETS.heroPhone.momentCardImage,
   },
   {
-    id: "authentic",
-    title: "Authentic Listener Experiences",
+    id: "scannable",
+    title: "Official Scannable Spotify Codes",
     description:
-      "Break free from repetitive chart playlists. Encounter music that speaks directly to your mood, places you love, and memories you want to preserve forever.",
-    previewImage:
-      "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=500&auto=format&fit=crop&q=80",
+      "Every card embeds an authentic Spotify wave barcode. Anyone can point their phone camera or the Spotify app at the card to instantly begin playing the exact song.",
+    previewImage: MEDIA_ASSETS.flowPhones.phone1Image,
   },
   {
-    id: "community",
-    title: "A Vibrant, Supportive Community",
+    id: "print",
+    title: "High-Resolution 3x Print Output",
     description:
-      "A collective space where discovering music is celebrated together. Share your Spotify Moments cards, exchange memories, and uncover hidden gems.",
-    previewImage:
-      "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&auto=format&fit=crop&q=80",
+      "Rendered with ultra-sharp canvas export suitable for physical wall art, bedroom photo walls, framed anniversary surprises, and keepsake scrapbooks.",
+    previewImage: MEDIA_ASSETS.accordionPreview,
   },
   {
-    id: "future",
-    title: "A Future Where Music Takes Center Stage",
+    id: "keepsake",
+    title: "Personal Keepsakes That Last",
     description:
-      "SoundSphere reimagines the potential of music platforms by creating an environment where authenticity, inclusivity, and interaction drive every experience.",
-    previewImage:
-      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&auto=format&fit=crop&q=80",
+      "Transform fleeting digital audio into tangible physical keepsakes. Pair your favorite song with a personal photo, heartfelt message, and significant milestone date.",
+    previewImage: MEDIA_ASSETS.floatingPolaroids.card3,
   },
 ];
 
 export default function NotJustListening() {
-  const [activeId, setActiveId] = useState<string>("future");
+  const [activeId, setActiveId] = useState<string>("frictionless");
 
   return (
     <section className="py-24 px-4 max-w-5xl mx-auto select-none">
-      <div className="text-center mb-12 space-y-2">
+      <div className="text-center mb-12 space-y-3">
+        <span className="text-xs font-mono font-bold tracking-widest text-[#CCFF00] uppercase">
+          DESIGNED FOR MEMORY KEEPERS
+        </span>
         <h2 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black tracking-tight text-white uppercase">
-          Not Just{" "}
+          Why Spotify{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#CEACFE] via-white to-[#CCFF00]">
-            Listening
+            Moments
           </span>
         </h2>
       </div>

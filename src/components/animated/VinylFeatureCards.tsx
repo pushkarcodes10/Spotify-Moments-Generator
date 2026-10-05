@@ -9,7 +9,7 @@ export default function VinylFeatureCards() {
 
   return (
     <section className="py-24 px-4 max-w-6xl mx-auto space-y-12 select-none">
-      {/* CARD 1: For Listeners (Lime Green #B8F53E) */}
+      {/* CARD 1: Physical Keepsakes & Prints (Lime Green #B8F53E) */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -21,14 +21,19 @@ export default function VinylFeatureCards() {
       >
         {/* Massive background watermark text */}
         <div className="absolute top-1/2 left-8 -translate-y-1/2 text-8xl sm:text-9xl md:text-[13rem] font-heading font-black text-black/5 pointer-events-none select-none tracking-tighter">
-          Listeners
+          Prints
         </div>
 
         <div className="relative z-10 max-w-xl">
           <div className="flex items-center gap-4">
-            <h3 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black tracking-tight text-black leading-none">
-              For Listeners
-            </h3>
+            <div>
+              <span className="text-xs font-mono font-bold uppercase tracking-wider bg-black/10 px-3 py-1 rounded-full">
+                PRINT READY
+              </span>
+              <h3 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black tracking-tight text-black leading-none mt-3">
+                Physical Keepsakes
+              </h3>
+            </div>
             {/* Floating 3D Headphones Sticker */}
             <motion.div
               animate={{
@@ -40,14 +45,14 @@ export default function VinylFeatureCards() {
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="transform group-hover:scale-110 transition-transform duration-300"
+              className="transform group-hover:scale-110 transition-transform duration-300 hidden sm:block"
             >
               <HeadphoneSticker className="w-16 h-16 sm:w-20 sm:h-20" />
             </motion.div>
           </div>
 
           <p className="mt-6 text-black/85 font-medium text-base sm:text-xl max-w-lg leading-relaxed">
-            Current discovery methods feel restrictive. Conventional algorithms suggest similar tracks and artists, depriving listeners of the excitement with uncovering unique voices.
+            Exported at ultra-sharp 3x print resolution. Perfect for scrapbooking, bedroom photo walls, framed anniversary surprises, or slipping into anniversary gifts.
           </p>
         </div>
 
@@ -67,24 +72,22 @@ export default function VinylFeatureCards() {
                 hoveredCard === 1 ? "animate-vinyl-spin-fast" : "animate-vinyl-spin"
               }`}
             >
-              {/* Concentric sheen grooves */}
               <div className="absolute inset-4 rounded-full border border-white/10" />
               <div className="absolute inset-8 rounded-full border border-white/5" />
               <div className="absolute inset-12 rounded-full border border-white/10" />
               <div className="absolute inset-16 rounded-full border border-white/5" />
               <div className="absolute inset-20 rounded-full border border-white/10" />
 
-              {/* Light reflection sheen gradient */}
               <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none" />
 
               {/* Center Vinyl Label */}
               <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-[#CCFF00] border-6 border-black flex flex-col items-center justify-center shadow-inner">
                 <span className="font-heading font-black text-xs sm:text-sm text-black tracking-widest uppercase">
-                  MUSIC
+                  PRINT
                 </span>
                 <div className="w-4 h-4 rounded-full bg-black my-1" />
                 <span className="text-[8px] sm:text-[9px] font-mono font-bold text-black/70">
-                  SIDE A • 33 RPM
+                  3X RESOLUTION
                 </span>
               </div>
             </div>
@@ -92,7 +95,7 @@ export default function VinylFeatureCards() {
         </div>
       </motion.div>
 
-      {/* CARD 2: For Artists (Lilac / Lavender #D4B8FF) */}
+      {/* CARD 2: Official Scannable Spotify Code (Lilac / Lavender #D4B8FF) */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -104,14 +107,19 @@ export default function VinylFeatureCards() {
       >
         {/* Massive background watermark text */}
         <div className="absolute top-1/2 left-8 -translate-y-1/2 text-8xl sm:text-9xl md:text-[13rem] font-heading font-black text-black/5 pointer-events-none select-none tracking-tighter">
-          Artists
+          Scan
         </div>
 
         <div className="relative z-10 max-w-xl">
           <div className="flex items-center gap-4">
-            <h3 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black tracking-tight text-black leading-none">
-              For Artists
-            </h3>
+            <div>
+              <span className="text-xs font-mono font-bold uppercase tracking-wider bg-black/10 px-3 py-1 rounded-full">
+                INSTANT PLAYBACK
+              </span>
+              <h3 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black tracking-tight text-black leading-none mt-3">
+                Scannable Code
+              </h3>
+            </div>
             {/* Floating 3D Vintage Microphone Sticker */}
             <motion.div
               animate={{
@@ -123,14 +131,14 @@ export default function VinylFeatureCards() {
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="transform group-hover:scale-110 transition-transform duration-300"
+              className="transform group-hover:scale-110 transition-transform duration-300 hidden sm:block"
             >
               <MicrophoneSticker className="w-16 h-16 sm:w-20 sm:h-20" />
             </motion.div>
           </div>
 
           <p className="mt-6 text-black/85 font-medium text-base sm:text-xl max-w-lg leading-relaxed">
-            Traditional platforms prioritize established names and commercial productions, leaving many talented independent artists in obscurity.
+            Every card embeds an authentic Spotify wave barcode. Point any phone camera or the Spotify search camera at the code to immediately stream the exact track.
           </p>
         </div>
 
@@ -161,11 +169,11 @@ export default function VinylFeatureCards() {
               {/* Center Vinyl Label with Lilac Accent */}
               <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-[#CEACFE] border-6 border-black flex flex-col items-center justify-center shadow-inner">
                 <span className="font-heading font-black text-xs sm:text-sm text-black tracking-widest uppercase">
-                  ARTIST
+                  SCAN
                 </span>
                 <div className="w-4 h-4 rounded-full bg-black my-1" />
                 <span className="text-[8px] sm:text-[9px] font-mono font-bold text-black/70">
-                  SIDE B • 45 RPM
+                  SPOTIFY BARCODE
                 </span>
               </div>
             </div>
